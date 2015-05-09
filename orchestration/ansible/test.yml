@@ -1,0 +1,19 @@
+---
+- hosts: test
+  vars:
+    http_port: 80
+  tasks:
+  - name: update ubuntu
+    command: sudo apt-get update
+  - name: install couchdb
+    command: sudo apt-get couchdb
+  - name: install curl
+    command: sudo apt-get install curl
+#  - name: create database
+#    get_url: url=http://localhost:5984/test dest=/home/ubuntu/ method=POST
+#  - name: copy file
+#    copy: src=/Users/cristianmontero/output.txt dest=/home/ubuntu/output.txt owner=root group=root mode=644 backup=yes
+  - name: create file
+    shell: lsb_release -a >> /home/ubuntu/log.log
+  - name: download file
+    fetch: src=/home/ubuntu/log.log dest=/Users/cristianmontero/Downloads

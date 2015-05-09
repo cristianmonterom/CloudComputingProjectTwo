@@ -1,0 +1,44 @@
+---
+- hosts: workers
+  sudo: true
+  vars:
+    http_port: 80
+
+  tasks:
+  - name: update ubuntu
+    command: sudo apt-get update
+  - name: install couchdb
+    apt: pkg=couchdb state=present
+#    command: sudo apt-get install couchdb
+  - name: install curl
+    apt: pkg=curl state=present
+#    command: sudo apt-get install curl
+  - name: installing pip3
+    apt: pkg=python3-pip state=present
+  - name: installing pip3 setuptools
+    apt: pkg=python3-setuptools state=present
+  - name: installing pip3
+    command: easy_install3 pip
+  - name: installing pip
+    apt: pkg=python-pip state=present
+#    command: sudo apt-get install python3-pip
+  - name: installing tweepy
+#    apt: pkg=tweepy state=present
+    command: pip3 install tweepy
+  - name: installing NLTK
+#    apt: pkg=nltk state=present
+    command: sudo pip3 install nltk
+  - name: create main folder for sources files
+    command: sudo mkdir /home/ubuntu/cc_project
+  - name: create folder for sources files
+    command: sudo mkdir /home/ubuntu/cc_project/harvesting
+  - name: upload files
+    copy: src=/Users/cristianmontero/PycharmProjects/CloudComputingProjectTwo/harvesting/* dest=/home/ubuntu/cc_project/harvesting owner=root group=root mode=775 backup=yes
+  - name: execution script
+    command: python3 /home/ubuntu/cc_project/harvesting/TweetsCity.py --server http://115.146.95.184:5984/ --db cloud_computing --consumer_key OvFt3ix2aummG26HtS8sT1MzU --consumer_secret 71tH27a3HljrW1cEOuoFZRPfmnZFqxhf4UXLI13rhgHfUA8mQ0 --token 128415623-tbIJqZujbYoYP4xsPleUWthHO7W6jnu5LscL6AAA --token_secret wSmbC1oRINjcnAvmCzbOABn8lsJ6GOxtZONGe6o80uEtr &
+#  - name: create database
+#    get_url: url=http://localhost:5984/test dest=/home/ubuntu/ method=POST
+#  - name: create file
+#    shell: lsb_release -a >> /home/ubuntu/log.log
+#  - name: download file
+#    fetch: src=/home/ubuntu/log.log dest=/Users/cristianmontero/Downloads
