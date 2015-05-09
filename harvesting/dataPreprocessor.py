@@ -107,7 +107,9 @@ def clean_tokens(tokens):
 
 
 def add_columns(tweet):
-    data = json.loads(tweet)
+    json_str = json.loads(json.dumps(tweet._json))
+    data = json_str
+    # data = json.loads(tweet)
     lang = data["user"]["lang"]
     text = data["text"]
     if lang != 'en':

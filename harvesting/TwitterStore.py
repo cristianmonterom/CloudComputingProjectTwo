@@ -25,7 +25,7 @@ class TweetStore(object):
 
     def save_tweet(self, tw):
         try:
-            json_str = json.loads(json.dumps(tw._json))
+            json_str = tw
             json_str['_id'] = json_str['id_str']
             self.db.save(json_str)
             return 1

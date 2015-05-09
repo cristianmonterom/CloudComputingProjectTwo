@@ -60,6 +60,6 @@ class GetTweets(object):
             try:
                 tweet = add_columns(tweet)
                 counter += twitter_store.save_tweet(tweet)
-                counter += twitter_store.save_tweet(tweet)
+                # counter += twitter_store.save_tweet(tweet)
             except:
                 counter += 0
