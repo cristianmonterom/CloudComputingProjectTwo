@@ -8,6 +8,7 @@ import sys
 import getopt
 import tweepy
 from dataPreprocessor import *
+from EvaluateRegion import Region
 # from TwitterStore import *
 
 
@@ -83,6 +84,8 @@ request_counter = 0
 get_tweets = GetTweets(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, DATA_BASE, SERVER)
 store_users = StoreUser(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, DATA_BASE_USER, SERVER)
 
+region_handler = Region()
+
 while True:
     try:
         tweets = api.search(q="place:%s" % place_id)
@@ -96,6 +99,8 @@ while True:
 
             # print("tweet: {} -- bow: {}".format(tweet.text, get_tokens(tweet.text)))
             tweet = add_columns(tweet)
+            tweet = region_handler.add_region_field(tweet)
+
             counter += twitter_store.save_tweet(tweet)
 
         time.sleep(5)
