@@ -71,28 +71,28 @@ def make_tweet_dict(txt):
 
 
 def get_classifier():
+    actual_path = os.path.dirname(__file__)
     classifier_path = 'classifier/classifier.pickle'
     training_data_path = 'classifier/Sentiment.csv'
 
-    if os.path.isfile(classifier_path) and os.access(classifier_path, os.R_OK):
-        f = open(classifier_path, 'rb')
+    if os.path.isfile(os.path.join(actual_path,classifier_path)) and os.access(os.path.join(actual_path,classifier_path), os.R_OK):
+        f = open(os.path.join(actual_path,classifier_path), 'rb')
         classifier = pickle.load(f)
         f.close()
         return classifier
     else:
         print("Training classifier")
-        fp = open(training_data_path, 'rt', encoding="utf8")
+        fp = open(os.path.join(actual_path,training_data_path), 'rt', encoding="utf8")
         reader = csv.reader(fp, delimiter=',', quotechar='"', escapechar='\\')
         tweets = []
         for row in reader:
             tweets.append([row[3], row[1]])
         vec_train = [(make_tweet_dict(t), s) for (t, s) in tweets]
         classifier = nltk.NaiveBayesClassifier.train(vec_train)
-        f = open(classifier_path, 'wb')
+        f = open(os.path.join(actual_path,classifier_path), 'wb')
         pickle.dump(classifier, f)
         f.close()
         return classifier
-
 
 def get_tokens(text):
     tokenizer = nltk.tokenize.RegexpTokenizer('[^\w\'\@\#]+', gaps=True)
