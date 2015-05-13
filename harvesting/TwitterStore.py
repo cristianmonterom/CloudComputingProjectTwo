@@ -31,3 +31,6 @@ class TweetStore(object):
             return 1
         except:
             return 0
+
+    def get_db_reference(self):
+        return self.db
