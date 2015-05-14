@@ -9,7 +9,7 @@ class TweetStore(object):
         try:
             self.server = couchdb.Server(url=url)
             self.db = self.server.create(dbname)
-            self._create_views()
+            # self._create_views()
         except couchdb.http.PreconditionFailed:
             self.db = self.server[dbname]
 

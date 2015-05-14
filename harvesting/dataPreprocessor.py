@@ -126,6 +126,23 @@ def add_columns(tweet):
     return data
 
 
+def add_columns_doc(doc):
+    data = doc
+    lang = data["user"]["lang"]
+    text = data["text"]
+    if lang != 'en':
+        text = goslate.Goslate().translate(text, 'en')
+    txt_low = ' ' + text.lower() + ' '
+    words = get_tokens(txt_low)
+    classifier = get_classifier()
+    temp = classifier.prob_classify(make_tweet_dict(txt_low))
+    polarity = "Positive" if temp.prob("1") >= 0.6 else "Negative" if temp.prob("0") >= 0.5379 else "Neutral"
+    bag_of_words = {"bag_of_words": words}
+    sentiment = {"polarity": polarity}
+    data.update(bag_of_words)
+    data.update(sentiment)
+    return data
+
 def text_info(text):
     text = goslate.Goslate().translate(text, 'en')
     txt_low = ' ' + text.lower() + ' '

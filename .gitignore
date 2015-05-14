@@ -1,0 +1,8 @@
+
+*.pyc
+
+harvesting/classifier/Sentiment.csv
+
+*.iml
+
+*.iml

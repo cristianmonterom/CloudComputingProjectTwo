@@ -6,7 +6,7 @@ import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Regions.EvaluateRegion import SG_planning
 from TwitterStore import TweetStore
-
+from dataPreprocessor import *
 DATA_BASE = ""
 SERVER = ""
 PAGE = ""
@@ -57,7 +57,8 @@ class SuburbDbUpdater:
             try:
                 result = doc['suburb']
             except:
-                ids_list.append(_id)
+                if not doc['views']:
+                    ids_list.append(_id)
         return ids_list
 
     def _get_doc_ids_with_suburb(self):
@@ -80,6 +81,11 @@ class SuburbDbUpdater:
             for id in several_ids:
                 doc = self.DBRef[id]
                 try:
+
+                    doc = add_columns_doc(doc)
+                except:
+                    print(doc)
+                try:
                     lonlat_list = doc['coordinates']['coordinates']
                     if lonlat_list is not None:
                         point = (lonlat_list[1], lonlat_list[0])
@@ -96,7 +102,7 @@ class SuburbDbUpdater:
         while True:
             ret_val = []
             ret_val = ids[i:i+n]
-            i+=n
+            i += n
             if len(ret_val) == 0:
                 break
             yield ret_val
