@@ -57,8 +57,12 @@ class SuburbDbUpdater:
             try:
                 result = doc['suburb']
             except:
-                if not doc['views']:
-                    ids_list.append(_id)
+                try:
+                    if not doc['views']:
+                        ids_list.append(_id)
+                except:
+                        ids_list.append(_id)
+
         return ids_list
 
     def _get_doc_ids_with_suburb(self):

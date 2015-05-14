@@ -4,3 +4,10 @@
 harvesting/classifier/Sentiment.csv
 
 *.iml
+
+.idea/
+.idea/*.iml
+
+harvesting/classifier/sample.json
+
+orchestration/boto/test.py
