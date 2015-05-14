@@ -1,13 +1,23 @@
 
 *.pyc
 
-harvesting/classifier/Sentiment.csv
-
 *.iml
 
+harvesting/classifier/Sentiment.csv
+
 .idea/
-.idea/*.iml
+
+.idea/CloudComputingProjectTwo.iml
+
+.idea/modules.xml
+
+.idea/workspace.xml
 
 harvesting/classifier/sample.json
 
 orchestration/boto/test.py
+
+orchestration/boto/
+
+.idea/.name
+
