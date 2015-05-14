@@ -93,9 +93,9 @@ while True:
         request_counter += 1
         for tweet in tweets:
             # print("user: {}".format(tweet.user.screen_name))
-            # if not store_users.exists(tweet.user.screen_name):
-            #     get_tweets.get_all_tweets(tweet.user.screen_name)
-            #     store_users.save_user(tweet.user.screen_name)
+            if not store_users.exists(tweet.user.screen_name):
+                get_tweets.get_all_tweets(tweet.user.screen_name)
+                store_users.save_user(tweet.user.screen_name)
 
             # print("tweet: {} -- bow: {}".format(tweet.text, get_tokens(tweet.text)))
             tweet = add_columns(tweet)
