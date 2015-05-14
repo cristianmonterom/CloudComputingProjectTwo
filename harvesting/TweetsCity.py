@@ -8,9 +8,10 @@ import sys
 import getopt
 import tweepy
 from dataPreprocessor import *
-from EvaluateRegion import Region
-# from TwitterStore import *
 
+# from TwitterStore import *
+import os.path
+from Regions.EvaluateRegion import Region
 
 CONSUMER_KEY = ''
 CONSUMER_SECRET = ''
@@ -85,6 +86,7 @@ get_tweets = GetTweets(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_S
 store_users = StoreUser(CONSUMER_KEY, CONSUMER_SECRET, OAUTH_TOKEN, OAUTH_TOKEN_SECRET, DATA_BASE_USER, SERVER)
 
 region_handler = Region()
+
 
 while True:
     try:

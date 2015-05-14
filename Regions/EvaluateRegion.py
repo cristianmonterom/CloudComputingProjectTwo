@@ -1,12 +1,15 @@
 __author__ = 'santiago_villagomez'
 from matplotlib.path import Path
-from PlaningAreas import areas_dict
+from Regions.PlaningAreas import areas_dict
 import json
 
 class SG_planning:
 
+    def __init__(self):
+        self.default_no_suburb = "No suburb found"
+
     def get_area_name(self,point):
-        # point = (latitude, longitude)
+        ## the parameter must be like  point = (latitude, longitude)
         area_found_result = False
         area_name = ""
         for i in areas_dict:
@@ -17,8 +20,11 @@ class SG_planning:
                 area_found_result = True
                 break
         if area_found_result == False:
-            area_name = "NO area Found"
+            area_name = self.default_no_suburb
         return area_name
+
+    def get_default_no_area(self):
+        return self.default_no_suburb
 
 class Location:
     def get_tweet_location(self,tweet):
