@@ -117,7 +117,8 @@ class SuburbDbUpdater:
                 # doc = add_columns_doc(doc)
                 doc = classifier.add_bag_and_polarity(doc)
             except:
-                print(doc)
+                # print(doc)
+                pass
             try:
                 lonlat_list = doc['coordinates']['coordinates']
                 if lonlat_list is not None:
@@ -179,6 +180,9 @@ class SuburbDbUpdater:
     #         # print("polling=",(time.time()-time_0))
 
     def _bulk_update(self):
+        # time_init = time.time()
+        log_file =  open('log_update.txt','a')
+
         number_of_threads = 8
         page_number = 1
         docs_number = 1
@@ -207,9 +211,11 @@ class SuburbDbUpdater:
             # print("processed=",(total_processed))
             # print("time for processing bulk %f = %f sec"%(self.pagination,(time.time()-time0)))
 
+            log_file.write("page {}: {} \n".format(page_number,(time.time()-time0)))
             page_number += 1
             skip = (page_number - 1) * int(self.pagination)
-
+        log_file.close()
+        # print("total time = ",(time.time()-time_init))
     # def _chunk_id_list(self, ids, n=1000):
     #     i = 0
     #     while True:
