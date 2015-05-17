@@ -5,6 +5,7 @@ import os
 import os.path
 import json
 import goslate
+import time
 
 testFeatures = \
     [('hasAddict',     (' addict',)), \
@@ -134,7 +135,9 @@ def add_columns_doc(doc):
         text = goslate.Goslate().translate(text, 'en')
     txt_low = ' ' + text.lower() + ' '
     words = get_tokens(txt_low)
+    time_0 = time.time()
     classifier = get_classifier()
+    print("Time getting classifier",(time.time() - time_0))
     temp = classifier.prob_classify(make_tweet_dict(txt_low))
     polarity = "Positive" if temp.prob("1") >= 0.6 else "Negative" if temp.prob("0") >= 0.5379 else "Neutral"
     bag_of_words = {"bag_of_words": words}
@@ -142,6 +145,26 @@ def add_columns_doc(doc):
     data.update(bag_of_words)
     data.update(sentiment)
     return data
+
+class Classifier:
+    def __init__(self):
+        self.classifier = get_classifier()
+    def add_bag_and_polarity(self,doc):
+        data = doc
+        lang = data["user"]["lang"]
+        text = data["text"]
+        if lang != 'en':
+            text = goslate.Goslate().translate(text, 'en')
+        txt_low = ' ' + text.lower() + ' '
+        words = get_tokens(txt_low)
+        temp = self.classifier.prob_classify(make_tweet_dict(txt_low))
+        polarity = "Positive" if temp.prob("1") >= 0.6 else "Negative" if temp.prob("0") >= 0.5379 else "Neutral"
+        bag_of_words = {"bag_of_words": words}
+        sentiment = {"polarity": polarity}
+        data.update(bag_of_words)
+        data.update(sentiment)
+        return data
+
 
 def text_info(text):
     text = goslate.Goslate().translate(text, 'en')
