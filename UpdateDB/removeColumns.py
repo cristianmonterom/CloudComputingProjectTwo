@@ -6,6 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Regions.EvaluateRegion import SG_planning
 from dataPreprocessor import *
 from TwitterStore import TweetStore
+import time
 
 DATA_BASE = "cloud_computing"
 SERVER = "http://127.0.0.1:5984/"
@@ -20,7 +21,8 @@ skip = (page_number - 1) * DOCS_PER_PAGE
 region_handler = SG_planning()
 
 while skip < docs_number:
-    rows = db.view('_all_docs', limit=DOCS_PER_PAGE, skip=0, include_docs=True)
+    time_0 = time.time()
+    rows = db.view('_all_docs', limit=DOCS_PER_PAGE, skip=skip, include_docs=True)
     docs_number = rows.total_rows
 
     # docs = [row.doc for row in rows]
@@ -47,6 +49,7 @@ while skip < docs_number:
 
         # row.doc = doc
         db.save(doc)
+    print("page {}: {}".format(page_number, (time.time() - time_0)))
 
     page_number += 1
     skip = (page_number - 1) * DOCS_PER_PAGE
