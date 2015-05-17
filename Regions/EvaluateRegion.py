@@ -2,6 +2,7 @@ __author__ = 'santiago_villagomez'
 from matplotlib.path import Path
 from Regions.PlaningAreas import areas_dict
 import json
+import time
 
 class SG_planning:
 
@@ -46,7 +47,11 @@ class Region:
 def main_program():
     evaluation_point = (1.242534, 103.832911)
     area_planning = SG_planning()
-    result = area_planning.get_area_name(evaluation_point)
+    tiempo0 = time.time()
+    for i in range (0,10000):
+        result = area_planning.get_area_name(evaluation_point)
+    print("10000 en :",(time.time() - tiempo0))
+
     print(result)
 
 if __name__ == '__main__':

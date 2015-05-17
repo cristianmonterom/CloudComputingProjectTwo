@@ -2802,7 +2802,7 @@ areas_dict = {
     'Bukit Batok':bukit_batok,
     'Bukit Mera':bukit_mera,
     'Bukit Panjang':bukit_panjan,
-    'Bukit_Timah':bukit_timah,
+    'Bukit Timah':bukit_timah,
     'Central Water Catchment':central_water_catchment,
     'Changi':chang_gi,
     'Changi Bay':changi_bay,
