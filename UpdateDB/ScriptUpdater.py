@@ -32,12 +32,12 @@ for opt, arg in opts:
 db = couchdb.Database(SERVER + DATA_BASE)
 page_number = 1
 docs_number = 1
-skip = (page_number - 1) * DOCS_PER_PAGE
+skip = (page_number - 1) * int(DOCS_PER_PAGE)
 region_handler = SG_planning()
 
 while skip < docs_number:
     rows = db.view('_all_docs', limit=DOCS_PER_PAGE, skip=0, include_docs=True)
-    docs_number = rows.total_rows
+    docs_number = int(rows.total_rows)
 
     # docs = [row.doc for row in rows]
     for row in rows:
@@ -52,9 +52,9 @@ while skip < docs_number:
         except:
             doc['suburb'] = region_handler.get_default_no_area()
 
-        db.update(doc)
+        db.save(doc)
 
     page_number += 1
-    skip = (page_number - 1) * DOCS_PER_PAGE
+    skip = (page_number - 1) * int(DOCS_PER_PAGE)
 
 # print(docs)
