@@ -75,7 +75,7 @@ class Region:
         return tweet
 
 # function: main_program
-# description: a function to do some tests if needed. Must be called explicitly by teh user
+# description: a function to do some tests if needed. Must be called explicitly by the user
 # return: None
 # parameters: None
 def main_program():
