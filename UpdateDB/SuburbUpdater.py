@@ -5,7 +5,7 @@ import getopt
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from Regions.EvaluateRegion import SG_planning
-from TwitterStore import TweetStore
+from harvesting.TwitterStore import TweetStore
 from dataPreprocessor import *
 DATA_BASE = ""
 SERVER = ""
@@ -36,13 +36,6 @@ class SuburbDbUpdater:
         self.pagination = int(page)
 
     def update(self):
-        # doc_ids_no_suburb = self._get_doc_ids_without_suburb()
-        # all_ids = self._get_doc_ids()
-        # ids_Yes_suburb = self._getDocIdsWithSuburb()
-        # print("TO DO .. everything")
-        # print("tatal without suburb field: ",len(doc_ids_no_suburb))
-        # print("total with suburb field: ",len(ids_Yes_suburb))
-        # print("total documents: ",len(all_ids))
         self._bulk_update()
 
     def _get_doc_ids(self):
@@ -56,16 +49,6 @@ class SuburbDbUpdater:
         ids_list = []
         rows = self.DBRef.view('_all_docs')
         ids_list = [row.id for row in rows ]
-        # for _id in self.DBRef:
-        #     doc = self.DBRef[_id]
-        #     try:
-        #         result = doc['suburb']
-        #     except:
-        #         try:
-        #             if not doc['views']:
-        #                 ids_list.append(_id)
-        #         except:
-        #                 ids_list.append(_id)
 
         return ids_list
 
@@ -80,41 +63,13 @@ class SuburbDbUpdater:
                 pass
         return ids_list
 
-    # def update_task(self,chuck_ids):
-    #     docs = []
-    #     region_handler = SG_planning()
-    #     classifier = Classifier()
-    #     for id in chuck_ids:
-    #         doc = self.DBRef[id]
-    #         try:
-    #
-    #             # doc = add_columns_doc(doc)
-    #             doc = classifier.add_bag_and_polarity(doc)
-    #         except:
-    #             print(doc)
-    #         try:
-    #             lonlat_list = doc['coordinates']['coordinates']
-    #             if lonlat_list is not None:
-    #                 point = (lonlat_list[1], lonlat_list[0])
-    #                 doc['suburb'] = region_handler.get_area_name(point)
-    #             else:
-    #                 doc['suburb'] = region_handler.get_default_no_area()
-    #         except:
-    #             doc['suburb'] = region_handler.get_default_no_area()
-    #         docs.append(doc)
-    #     self.DBRef.update(docs)
-
     def update_task(self,chunk_docs):
         docs = []
         region_handler = SG_planning()
         classifier = Classifier()
         for row in chunk_docs:
             doc = row
-            # doc = classifier.add_bag_and_polarity(row)
-            # doc = self.DBRef[id]
             try:
-
-                # doc = add_columns_doc(doc)
                 doc = classifier.add_bag_and_polarity(doc)
             except:
                 # print(doc)
@@ -131,68 +86,35 @@ class SuburbDbUpdater:
             docs.append(doc)
         self.DBRef.update(docs)
 
-
-    # def _bulk_update(self, ids_to_update):
-    #     if not ids_to_update:
-    #         return
-    #     number_of_threads = 8
-    #     for several_ids in self._chunk_id_list(ids_to_update, self.pagination):
-    #         time0 = time.time()
-    #         chunks=[several_ids[x:x+int(self.pagination/number_of_threads)] for x in range(0, len(several_ids), int(self.pagination/number_of_threads))]
-    #         my_threads = []
-    #         for i in range(0,number_of_threads):
-    #             t= Thread(target=self.update_task,args=(chunks[i],))
-    #             t.start()
-    #             my_threads.append(t)
-    #         ans = True
-    #         while ans == True:
-    #             for t in my_threads:
-    #                 if t.isAlive():
-    #                     break
-    #                 ans = False
-    #         print("procesados=",(len(several_ids)))
-    #         print("tiempo procesando %f = %f sec"%(self.pagination,(time.time()-time0)))
-    #
-    #
-    #
-    #
-    #
-    #         # time_0 = time.time()
-    #         # docs = []
-    #         # for id in several_ids:
-    #         #     doc = self.DBRef[id]
-    #         #     try:
-    #         #
-    #         #         doc = add_columns_doc(doc)
-    #         #     except:
-    #         #         print(doc)
-    #         #     try:
-    #         #         lonlat_list = doc['coordinates']['coordinates']
-    #         #         if lonlat_list is not None:
-    #         #             point = (lonlat_list[1], lonlat_list[0])
-    #         #             doc['suburb'] = region_handler.get_area_name(point)
-    #         #         else:
-    #         #             doc['suburb'] = region_handler.get_default_no_area()
-    #         #     except:
-    #         #         doc['suburb'] = region_handler.get_default_no_area()
-    #         #     docs.append(doc)
-    #         # self.DBRef.update(docs)
-    #         # print("polling=",(time.time()-time_0))
-
     def _bulk_update(self):
         # time_init = time.time()
-        log_file =  open('log_update.txt','a')
-
         number_of_threads = 8
-        page_number = 1
-        docs_number = 1
-        skip = (page_number - 1) * int(self.pagination)
-        total_processed = 0;
+        num_records_so_far = 0
+        try:
+            log_file =  open('log_update.txt','r')
+            line_list = log_file.readlines()
+            log_file.close()
+            last_line_items = line_list[len(line_list)-1].split()
+            num_records_so_far = int(last_line_items[len(last_line_items)-1])
+            total_processed = num_records_so_far
+            ## fool the process before start
+            docs_number = num_records_so_far + 1
+            skip = num_records_so_far
+            page_number = int(last_line_items[1][:-1])
+        except:
+            page_number = 1
+            docs_number = 1
+            skip = 0
+            total_processed = 0
+
         while skip < docs_number:
+            log_file =  open('log_update.txt','a')
             time0 = time.time()
             rows = self.DBRef.view('_all_docs', limit=self.pagination, skip=skip, include_docs=True)
             docs_number = int(rows.total_rows)
             docs = [row.doc for row in rows]
+            if(len(docs)==0):
+                break
             # for several_docs in self._chunk_doc_list(docs, self.pagination):
             #     time0 = time.time()
             chunks=[docs[x:x+int(self.pagination/number_of_threads)] for x in range(0, len(docs), int(len(docs)/number_of_threads))]
@@ -208,23 +130,15 @@ class SuburbDbUpdater:
                         break
                     ans = False
             total_processed += len(docs)
+            num_records_so_far += len(docs)
             # print("processed=",(total_processed))
             # print("time for processing bulk %f = %f sec"%(self.pagination,(time.time()-time0)))
 
-            log_file.write("page {}: {} \n".format(page_number,(time.time()-time0)))
+            log_file.write("page {}: {} remaining {} records {} \n".format(page_number,(time.time()-time0),  docs_number- skip,total_processed))
             page_number += 1
-            skip = (page_number - 1) * int(self.pagination)
-        log_file.close()
-        # print("total time = ",(time.time()-time_init))
-    # def _chunk_id_list(self, ids, n=1000):
-    #     i = 0
-    #     while True:
-    #         ret_val = []
-    #         ret_val = ids[i:i+n]
-    #         i += n
-    #         if len(ret_val) == 0:
-    #             break
-    #         yield ret_val
+            skip = num_records_so_far
+            log_file.close()
+
 
     def _chunk_doc_list(self, docs, n=1000):
         i = 0
