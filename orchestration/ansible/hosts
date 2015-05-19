@@ -1,32 +1,38 @@
+##############################################
+#   COMP90024 - Cluster and Cloud Computing
+#   Project 2: Twitter Analysis
+#   Author: Group 21
+##############################################
+
 [webservers]
-144.6.227.12
+115.146.95.157
 
 [workers]
 115.146.95.254
+115.146.95.227
 
 [dbservers]
 115.146.95.184
 
 [workers:vars]
-ansible_ssh_private_key_file = /Users/cristianmontero/ccc_security_key.pem
+ansible_ssh_private_key_file = ccc_security_key.pem
 ansible_ssh_port = 22
 ansible_ssh_user = ubuntu
 
 
 [webservers:vars]
-ansible_ssh_private_key_file = /Users/cristianmontero/ccc_security_key.pem
+ansible_ssh_private_key_file = 1stKey.pem
 ansible_ssh_port = 22
 ansible_ssh_user = ubuntu
 
 [dbservers:vars]
-ansible_ssh_private_key_file = /Users/cristianmontero/tweeter_nicta.key
+ansible_ssh_private_key_file = tweeter_nicta.key
 ansible_ssh_port = 22
 ansible_ssh_user = ubuntu
 
-
 [test]
 115.146.93.162
-
+144.6.227.12
 
 [test:vars]
 ansible_ssh_private_key_file=/Users/cristianmontero/ccc_security_key.pem

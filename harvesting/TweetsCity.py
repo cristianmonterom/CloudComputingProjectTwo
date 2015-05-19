@@ -1,4 +1,9 @@
-__author__ = 'cristianmontero'
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
+
+if __name__ == '__main__' and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
 from HarvestingTweets import *
 from StoringUser import *
 from TwitterStore import *
@@ -9,8 +14,6 @@ import getopt
 import tweepy
 from dataPreprocessor import *
 
-# from TwitterStore import *
-import os.path
 from Regions.EvaluateRegion import Region
 
 CONSUMER_KEY = ''
@@ -29,6 +32,7 @@ DATA_BASE_USER = ""
 #
 # DATA_BASE = "cloud_computing"
 # SERVER = "http://localhost:5984"
+
 
 def print_help():
     print('python3 TweetsCity.py [-db <database>] -server <url server> -h')
@@ -64,13 +68,6 @@ for opt, arg in opts:
     elif opt in ("-u", "--db_user"):
         DATA_BASE_USER = arg
 
-# print('CONSUMER_KEY = {}'.format(CONSUMER_KEY))
-# print('CONSUMER_SECRET = {}'.format(CONSUMER_SECRET))
-# print('OAUTH_TOKEN = {}'.format(OAUTH_TOKEN))
-# print('OAUTH_TOKEN_SECRET = {}'.format(OAUTH_TOKEN_SECRET))
-# print('DATA_BASE = {}'.format(DATA_BASE))
-# print('SERVER = {}'.format(SERVER))
-
 twitter_store = TweetStore(DATA_BASE, url=SERVER)
 
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -91,22 +88,16 @@ region_handler = Region()
 while True:
     try:
         tweets = api.search(q="place:%s" % place_id)
-        # tweets = api.search(geocode="{},{},{}".format('1.295853', '103.809934', '10km'))
         request_counter += 1
         for tweet in tweets:
-            # print("user: {}".format(tweet.user.screen_name))
             if not store_users.exists(tweet.user.screen_name):
                 get_tweets.get_all_tweets(tweet.user.screen_name)
                 store_users.save_user(tweet.user.screen_name)
 
-            # print("tweet: {} -- bow: {}".format(tweet.text, get_tokens(tweet.text)))
             tweet = add_columns(tweet)
             tweet = region_handler.add_region_field(tweet)
-
             counter += twitter_store.save_tweet(tweet)
 
         time.sleep(5)
-        # print(tweet.user + "|" + tweet.text + " | " + tweet.place.name if tweet.place else "Undefined place")
     except:
-        #print("request counter: {}".format(request_counter))
         time.sleep(60)

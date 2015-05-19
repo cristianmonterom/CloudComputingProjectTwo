@@ -1,4 +1,8 @@
-__author__ = 'cristianmontero'
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
+
+if __name__ == '__main__' and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import sys
 import os.path

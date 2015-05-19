@@ -1,4 +1,4 @@
-__author__ = 'cristianmontero'
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
 from DatabaseHandler import *
 import couchdb
 import json
@@ -16,20 +16,10 @@ class StoreUser(object):
         self.server = server
         self.db_users = DatabaseHandler(self.database, self.server)
 
-# DATA_BASE = "cloud_computing"
-# SERVER = "http://localhost:5984"
-# VIEW = "_design/user_tweets/_view/user_tweets"
-#
-# DATA_BASE_DEST = "users_test"
-# SERVER_DEST = "http://localhost:5984"
-
     def save_user(self, username):
         d = '{"_id": "' + username + '", "num_tweets": 1, "harvested": "true" }'
         try:
             user = json.loads(d)
-            # user['_id'] = username
-            # user['harvested'] = 'false'
-            # user['num_tweets'] = 1
             self.db_users.save(user)
         except couchdb.http.ResourceConflict:
             user = self.db_users.get_row(user['_id'])
@@ -39,7 +29,7 @@ class StoreUser(object):
     def exists(self, username):
         try:
             user = self.db_users.get_row(username)
-            if user == None:
+            if user is None:
                 return False
             else:
                 return True

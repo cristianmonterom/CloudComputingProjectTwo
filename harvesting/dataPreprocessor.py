@@ -1,3 +1,9 @@
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
+
+if __name__ == '__main__' and __package__ is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
 import csv
 import nltk
 import pickle
@@ -5,7 +11,6 @@ import os
 import os.path
 import json
 import goslate
-import time
 
 testFeatures = \
     [('hasAddict',     (' addict',)), \
@@ -90,10 +95,11 @@ def get_classifier():
             tweets.append([row[3], row[1]])
         vec_train = [(make_tweet_dict(t), s) for (t, s) in tweets]
         classifier = nltk.NaiveBayesClassifier.train(vec_train)
-        f = open(os.path.join(actual_path,classifier_path), 'wb')
+        f = open(os.path.join(actual_path, classifier_path), 'wb')
         pickle.dump(classifier, f)
         f.close()
         return classifier
+
 
 def get_tokens(text):
     tokenizer = nltk.tokenize.RegexpTokenizer('[^\w\'\@\#]+', gaps=True)
@@ -110,7 +116,6 @@ def clean_tokens(tokens):
 def add_columns(tweet):
     json_str = json.loads(json.dumps(tweet._json))
     data = json_str
-    # data = json.loads(tweet)
     lang = data["user"]["lang"]
     text = data["text"]
     if lang != 'en':
@@ -135,11 +140,8 @@ def add_columns_doc(doc):
         text = goslate.Goslate().translate(text, 'en')
     txt_low = ' ' + text.lower() + ' '
     words = get_tokens(txt_low)
-    # time_0 = time.time()
     classifier = get_classifier()
-    # print("Time getting classifier",(time.time() - time_0))
     temp = classifier.prob_classify(make_tweet_dict(txt_low))
-    # polarity = "Positive" if temp.prob("1") >= 0.6 else "Negative" if temp.prob("0") >= 0.5379 else "Neutral"
     polarity = "Positive" if temp.prob("1") >= 0.50 else "Negative" if temp.prob("0") >= 0.54 else "Neutral"
     bag_of_words = {"bag_of_words": words}
     sentiment = {"polarity": polarity}
@@ -147,10 +149,12 @@ def add_columns_doc(doc):
     data.update(sentiment)
     return data
 
+
 class Classifier:
     def __init__(self):
         self.classifier = get_classifier()
-    def add_bag_and_polarity(self,doc):
+
+    def add_bag_and_polarity(self, doc):
         data = doc
         lang = data["user"]["lang"]
         text = data["text"]

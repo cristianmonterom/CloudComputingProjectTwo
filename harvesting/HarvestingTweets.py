@@ -1,4 +1,4 @@
-__author__ = 'cristianmontero'
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
 import tweepy
 from TwitterStore import *
 from dataPreprocessor import *
@@ -14,13 +14,6 @@ class GetTweets(object):
 
         self.data_server = database
         self.server = server
-
-        # self.consumer_key = 'OvFt3ix2aummG26HtS8sT1MzU'
-        # self.consumer_secret = '71tH27a3HljrW1cEOuoFZRPfmnZFqxhf4UXLI13rhgHfUA8mQ0'
-        # self.access_key = '128415623-tbIJqZujbYoYP4xsPleUWthHO7W6jnu5LscL6AAA'
-        # self.access_secret = 'wSmbC1oRINjcnAvmCzbOABn8lsJ6GOxtZONGe6o80uEtr'
-        # self.DATA_BASE = "test"
-        # self.SERVER = "http://localhost:5984"
 
     def get_all_tweets(self, screen_name):
         # Twitter only allows access to a users most recent 3240 tweets with this method
@@ -53,13 +46,11 @@ class GetTweets(object):
             # update the id of the oldest tweet less one
             oldest = alltweets[-1].id - 1
 
-        # print("num tweets: {}".format(str(count_tweets)))
         counter = 0
         twitter_store = TweetStore(self.data_server, url=self.server)
         for tweet in alltweets:
             try:
                 tweet = add_columns(tweet)
                 counter += twitter_store.save_tweet(tweet)
-                # counter += twitter_store.save_tweet(tweet)
             except:
                 counter += 0

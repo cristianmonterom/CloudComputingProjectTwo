@@ -5,7 +5,7 @@
 ##############################################
 
 ---
-- hosts: workers
+- hosts: dbservers
   sudo: true
   vars:
     http_port: 80
@@ -33,7 +33,7 @@
   - name: installing goslate
     command: sudo pip install goslate
   - name: installing matplotlib
-    apt: pkg=python3-matplotlib state=present
+    command: sudo apt-get install python3-matplotlib
   - name: Assures /home/ubuntu/cc_project/Harvesting dir exists
     file: path=/home/ubuntu/cc_project/Harvesting state=directory
   - name: Assures /home/ubuntu/cc_project/Regions dir exists
@@ -46,7 +46,11 @@
     synchronize: src=/Users/cristianmontero/PycharmProjects/CloudComputingProjectTwo/UpdateDB/ dest=/home/ubuntu/cc_project/UpdateDB
   - name: setting permissions
     command: sudo chmod -R 777 /home/ubuntu/cc_project/
+  - name: create database
+    get_url: url=http://localhost:5984/cloud_computing dest=/home/ubuntu/ method=POST
   - name: execution harvester in background
     command: python3 /home/ubuntu/cc_project/Harvesting/TweetsCity.py --server http://115.146.95.184:5984/ --db cloud_computing --consumer_key OvFt3ix2aummG26HtS8sT1MzU --consumer_secret 71tH27a3HljrW1cEOuoFZRPfmnZFqxhf4UXLI13rhgHfUA8mQ0 --token 128415623-tbIJqZujbYoYP4xsPleUWthHO7W6jnu5LscL6AAA --token_secret wSmbC1oRINjcnAvmCzbOABn8lsJ6GOxtZONGe6o80uEtr --db_user cc_users &
     async: 1000
     poll: 0
+
+

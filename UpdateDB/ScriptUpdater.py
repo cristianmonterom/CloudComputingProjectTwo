@@ -1,4 +1,4 @@
-__author__ = 'cristianmontero'
+__author__ = 'Group 21 - COMP90024 Cluster and Cloud Computing'
 
 import sys
 import getopt
@@ -70,3 +70,4 @@ while skip < docs_number:
 
 f.write("total time: {} \n".format(total_time))
 f.close()
+
