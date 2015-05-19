@@ -32,9 +32,9 @@ ansible_ssh_user = ubuntu
 
 [test]
 115.146.93.162
-144.6.227.12
+#144.6.227.12
 
 [test:vars]
-ansible_ssh_private_key_file=/Users/cristianmontero/ccc_security_key.pem
+ansible_ssh_private_key_file=ccc_security_key.pem
 ansible_ssh_port=22
 ansible_ssh_user=ubuntu

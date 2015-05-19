@@ -12,6 +12,7 @@ from dataPreprocessor import *
 from TwitterStore import TweetStore
 import time
 
+# Setting required variables
 DATA_BASE = "cloud_computing"
 SERVER = "http://127.0.0.1:5984/"
 DOCS_PER_PAGE = 10000
@@ -24,39 +25,32 @@ docs_number = 1
 skip = (page_number - 1) * DOCS_PER_PAGE
 region_handler = SG_planning()
 
+# Read database rows by chunks to remove fields suburb, bag_of_words and polarity
+# if tweets contains them
 while skip < docs_number:
     time_0 = time.time()
     rows = db.view('_all_docs', limit=DOCS_PER_PAGE, skip=skip, include_docs=True)
     docs_number = rows.total_rows
 
-    # docs = [row.doc for row in rows]
     for row in rows:
         doc = row.doc
         try:
-            # doc.delete[]
             doc.pop('suburb', None)
-            # doc['suburb'] = ''
         except:
             print()
 
         try:
             doc.pop('bag_of_words', None)
-            # doc['bag_of_words'] = ''
         except:
             print()
 
         try:
             doc.pop('polarity', None)
-            # doc['polarity'] = ''
         except:
             print()
 
-        # row.doc = doc
         db.save(doc)
     print("page {}: {}".format(page_number, (time.time() - time_0)))
 
     page_number += 1
     skip = (page_number - 1) * DOCS_PER_PAGE
-
-
-# print(docs)

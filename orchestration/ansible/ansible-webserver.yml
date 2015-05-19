@@ -1,0 +1,29 @@
+##############################################
+#   COMP90024 - Cluster and Cloud Computing
+#   Project 2: Twitter Analysis
+#   Author: Group 21
+##############################################
+
+---
+- hosts: test
+  sudo: true
+  vars:
+    http_port: 80
+  tasks:
+  - name: update ubuntu
+    command: sudo apt-get update
+  - name: install nodejs
+    apt: pkg=nodejs state=present
+  - name: install npm
+    command: sudo apt-get install npm
+#    apt: pkg=npm state=present
+  - name: installing git
+    apt: pkg=git state=present
+  - name: Assures /home/ubuntu/web dir exists
+    file: path=/home/ubuntu/web state=directory
+  - name: download source code from repository
+    git: repo=https://github.com/quang-dn/ComputingProjectFrontEnd.git dest=/home/ubuntu/web
+  - name: install nodemon
+    command: sudo npm install -g nodemon
+  - name: run web server
+    command: nodemon /home/ubuntu/web/web.js

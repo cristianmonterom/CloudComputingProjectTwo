@@ -33,7 +33,7 @@ DATA_BASE_USER = ""
 # DATA_BASE = "cloud_computing"
 # SERVER = "http://localhost:5984"
 
-
+# Function which will shows help in terminal if user requires
 def print_help():
     print('python3 TweetsCity.py [-db <database>] -server <url server> -h')
 
@@ -87,9 +87,11 @@ region_handler = Region()
 
 while True:
     try:
+        # search tweets from a specific location in our case from Singapore
         tweets = api.search(q="place:%s" % place_id)
         request_counter += 1
         for tweet in tweets:
+            # get historic tweets from user if it was not gathered yet
             if not store_users.exists(tweet.user.screen_name):
                 get_tweets.get_all_tweets(tweet.user.screen_name)
                 store_users.save_user(tweet.user.screen_name)
@@ -100,4 +102,6 @@ while True:
 
         time.sleep(5)
     except:
+        # when Twitter API reject connection because of many request
+        # the application will wait a minute to ask again for a connection
         time.sleep(60)

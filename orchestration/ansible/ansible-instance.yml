@@ -22,8 +22,6 @@
     apt: pkg=python3-setuptools state=present
   - name: installing pip3
     command: easy_install3 pip
-#  - name: installing pip
-#    apt: pkg=python-pip state=present
   - name: install couchdb for python3
     command: sudo pip3 install couchdb
   - name: installing tweepy
@@ -34,16 +32,12 @@
     command: sudo pip install goslate
   - name: installing matplotlib
     apt: pkg=python3-matplotlib state=present
-  - name: Assures /home/ubuntu/cc_project/Harvesting dir exists
-    file: path=/home/ubuntu/cc_project/Harvesting state=directory
-  - name: Assures /home/ubuntu/cc_project/Regions dir exists
-    file: path=/home/ubuntu/cc_project/Regions state=directory
-  - name: upload harvesting files
-    synchronize: src=/Users/cristianmontero/PycharmProjects/CloudComputingProjectTwo/harvesting/ dest=/home/ubuntu/cc_project/Harvesting
-  - name: upload regions files
-    synchronize: src=/Users/cristianmontero/PycharmProjects/CloudComputingProjectTwo/Regions/ dest=/home/ubuntu/cc_project/Regions
-  - name: upload updatedb files
-    synchronize: src=/Users/cristianmontero/PycharmProjects/CloudComputingProjectTwo/UpdateDB/ dest=/home/ubuntu/cc_project/UpdateDB
+  - name: installing git
+    apt: pkg=git state=present
+  - name: Assures /home/ubuntu/cc_project dir exists
+    file: path=/home/ubuntu/cc_project state=directory
+  - name: download source code from repository
+    git: repo=https://github.com/cristianmonterom/CloudComputingProjectTwo.git dest=/home/ubuntu/cc_project
   - name: setting permissions
     command: sudo chmod -R 777 /home/ubuntu/cc_project/
   - name: execution harvester in background

@@ -22,8 +22,6 @@
     apt: pkg=python3-setuptools state=present
   - name: installing pip3
     command: easy_install3 pip
-#  - name: installing pip
-#    apt: pkg=python-pip state=present
   - name: install couchdb for python3
     command: sudo pip3 install couchdb
   - name: installing tweepy
@@ -47,10 +45,21 @@
   - name: setting permissions
     command: sudo chmod -R 777 /home/ubuntu/cc_project/
   - name: create database
-    get_url: url=http://localhost:5984/cloud_computing dest=/home/ubuntu/ method=POST
+    command: curl -X PUT http://localhost:5984/cloud_computing
   - name: execution harvester in background
     command: python3 /home/ubuntu/cc_project/Harvesting/TweetsCity.py --server http://115.146.95.184:5984/ --db cloud_computing --consumer_key OvFt3ix2aummG26HtS8sT1MzU --consumer_secret 71tH27a3HljrW1cEOuoFZRPfmnZFqxhf4UXLI13rhgHfUA8mQ0 --token 128415623-tbIJqZujbYoYP4xsPleUWthHO7W6jnu5LscL6AAA --token_secret wSmbC1oRINjcnAvmCzbOABn8lsJ6GOxtZONGe6o80uEtr --db_user cc_users &
     async: 1000
     poll: 0
+  - name: config httpd
+    command: curl -X PUT http://localhost:5984/_config/httpd/enable_cors -d '"true"'
+  - name: config cors
+    command: curl -X PUT http://localhost:5984/_config/cors/origins -d '"*"'
+  - name: config credentials
+    command: curl -X PUT http://localhost:5984/_config/cors/credentials -d '"true"'
+  - name: config methods
+    command: curl -X PUT http://localhost:5984/_config/cors/methods -d '"GET, PUT, POST, HEAD, DELETE"'
+  - name: config headers
+    command: curl -X PUT http://localhost:5984/_config/cors/headers -d '"accept, authorization, content-type, origin, referer, x-csrf-token"'
+
 
 

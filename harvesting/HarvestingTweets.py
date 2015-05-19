@@ -3,7 +3,10 @@ import tweepy
 from TwitterStore import *
 from dataPreprocessor import *
 
-
+'''
+    Class which gather historic tweets from a user
+    * Twitter only allows access to a users most recent 3240 tweets with this method
+'''
 class GetTweets(object):
 
     def __init__(self, consumer_key, consumer_secret, access_key, access_secret, database, server):
@@ -15,8 +18,10 @@ class GetTweets(object):
         self.data_server = database
         self.server = server
 
+    # function: get_all_tweets
+    # return: None
+    # description: gather tweets from a specific user
     def get_all_tweets(self, screen_name):
-        # Twitter only allows access to a users most recent 3240 tweets with this method
 
         # authorize twitter, initialize tweepy
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
@@ -50,6 +55,7 @@ class GetTweets(object):
         twitter_store = TweetStore(self.data_server, url=self.server)
         for tweet in alltweets:
             try:
+                # add bag of words and polarity fields to the tweet
                 tweet = add_columns(tweet)
                 counter += twitter_store.save_tweet(tweet)
             except:
