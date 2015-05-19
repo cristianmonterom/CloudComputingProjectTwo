@@ -4,6 +4,10 @@ if __name__ == '__main__' and __package__ is None:
     from os import sys, path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
+# suburbs tuples list
+# Description: Each list defines the boundary (polygon) of a different suburb.
+# Usages: Those will be used to asses if a point falls inside
+
 ang_mo_kio = [
     (1.394370, 103.818800),
     (1.390630, 103.818180),
@@ -2797,6 +2801,11 @@ yishun = [
     # add first point
 ]
 
+
+# areas_dict dictionary
+# Description: A dictionary with the a readable name format as key and a reference to the suburb boundary as value.
+# Usages: It is needed when evaluating a point through iteration on each
+#         Defines the real name os each suburb used in the application
 areas_dict = {
     'Ang Mo Kio':ang_mo_kio,
     'Bedok':bedok,
