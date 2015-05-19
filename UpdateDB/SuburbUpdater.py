@@ -12,6 +12,7 @@ SERVER = ""
 PAGE = ""
 import time
 from threading import Thread
+from couchdb.design import ViewDefinition
 
 
 # code:
@@ -193,6 +194,15 @@ class SuburbDbUpdater:
             if len(ret_val) == 0:
                 break
             yield ret_val
+
+    # function: _create_view
+    # return: None
+    # description: Creates the main view in database
+    def _create_view(self):
+        view_map = 'function(doc) { if(doc.bag_of_words) { for (word in doc.bag_of_words) { emit([doc.bag_of_words[word], doc.polarity, doc.suburb],1)}}}'
+        view_reduce = '_sum'
+        view = ViewDefinition('scenarios', 'get_polarity_stats', view_map, reduce_fun=view_reduce)
+        view.sync(self.DBRef)
 
 # function: update_main
 # description: main method that access a couchdb db and performs the update

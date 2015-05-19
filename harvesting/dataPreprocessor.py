@@ -142,7 +142,7 @@ def add_columns(tweet):
     words = get_tokens(txt_low)
     classifier = get_classifier()
     temp = classifier.prob_classify(make_tweet_dict(txt_low))
-    polarity = "Positive" if temp.prob("1") >= 0.6 else "Negative" if temp.prob("0") >= 0.5379 else "Neutral"
+    polarity = "Positive" if temp.prob("1") >= 0.50 else "Negative" if temp.prob("0") >= 0.54 else "Neutral"
     bag_of_words = {"bag_of_words": words}
     sentiment = {"polarity": polarity}
     data.update(bag_of_words)
