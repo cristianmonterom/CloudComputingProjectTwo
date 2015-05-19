@@ -201,7 +201,7 @@ class SuburbDbUpdater:
     def _create_view(self):
         view_map = 'function(doc) { if(doc.bag_of_words) { for (word in doc.bag_of_words) { emit([doc.bag_of_words[word], doc.polarity, doc.suburb],1)}}}'
         view_reduce = '_sum'
-        view = ViewDefinition('scenarios', 'get_polarity_stats', view_map, reduce_fun=view_reduce)
+        view = ViewDefinition('application', 'mainview', view_map, reduce_fun=view_reduce)
         view.sync(self.DBRef)
 
 # function: update_main
@@ -212,6 +212,7 @@ def update_main():
     twitter_store = TweetStore(DATA_BASE, url=SERVER)
     updater = SuburbDbUpdater(twitter_store.get_db_reference(), PAGE)
     updater.update()
+    updater._create_view()
 
 if __name__ == '__main__':
     update_main()
