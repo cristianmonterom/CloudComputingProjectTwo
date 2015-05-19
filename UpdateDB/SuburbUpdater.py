@@ -15,7 +15,7 @@ from threading import Thread
 
 
 # code:
-# description: initial code fro parameter handling
+# description: initial code for parameter handling
 # sets: SERVER (server address), DATA_BASE(database name), PAGE (number of records to be updated at once)
 try:
     opts, args = getopt.getopt(sys.argv[1:], "s:d:p:", ["server=", "db=", "page="])

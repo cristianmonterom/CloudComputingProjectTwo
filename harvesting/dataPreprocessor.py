@@ -12,6 +12,8 @@ import os.path
 import json
 import goslate
 
+# code:
+# description: structure to classify and build a bag of words
 testFeatures = \
     [('hasAddict',     (' addict',)), \
      ('hasAwesome',    ('awesome',)), \
@@ -65,7 +67,10 @@ testFeatures = \
      ('hasWinky',      (';)',)), \
      ('hasWow',        ('wow','omg')) ]
 
-
+# function: make_tweet_dict
+# description: method that created a dictionary containing true if content match any word inside testFeatures
+# return: fvec dictionary
+# parameters: plain text txt
 def make_tweet_dict(txt):
     fvec = {}    
     for test in testFeatures:
@@ -75,7 +80,11 @@ def make_tweet_dict(txt):
             fvec[key] = fvec[key] or (txt.find(tstr) != -1)            
     return fvec
 
-
+# function: get_classifier
+# description: it access a classifier file if already exist otherwise will train a new model given data
+#              specified by Sentiment.csv
+# return: a binary file model. A classifier!!
+# parameters: None
 def get_classifier():
     actual_path = os.path.dirname(__file__)
     classifier_path = 'classifier/classifier.pickle'
@@ -100,19 +109,28 @@ def get_classifier():
         f.close()
         return classifier
 
-
+# function: get_tokens
+# description: it tokenize the plain text to retrieve all its components
+# return: token list without stopwords
+# parameters: plain text
 def get_tokens(text):
     tokenizer = nltk.tokenize.RegexpTokenizer('[^\w\'\@\#]+', gaps=True)
     tokens = tokenizer.tokenize(text)  
     return clean_tokens(tokens)
 
-
+# function: clean_tokens
+# description: it eliminates the stopwords for english language
+# return: token list without stopwords
+# parameters: list of tokens
 def clean_tokens(tokens):
     stop_words = nltk.corpus.stopwords.words('english')
     tokens = [token for token in tokens if token not in stop_words]
     return tokens
 
-
+# function: add_columns
+# description: it will add the polarity and bag_of_words field/column into a given tweet
+# return: a the original tweet plus (included) bag_of_words and polarity
+# parameters: a single tweet
 def add_columns(tweet):
     json_str = json.loads(json.dumps(tweet._json))
     data = json_str
@@ -131,7 +149,11 @@ def add_columns(tweet):
     data.update(sentiment)
     return data
 
-
+# function: add_columns_doc
+# description: it will add the polarity and bag_of_words field/column into a given tweet.
+#              It handles a different tweet format
+# return: a tweet doc
+# parameters: a single tweet doc
 def add_columns_doc(doc):
     data = doc
     lang = data["user"]["lang"]
@@ -149,11 +171,20 @@ def add_columns_doc(doc):
     data.update(sentiment)
     return data
 
-
+# Classifier: class
+# Usage: It is intended for update a doc tweet by adding a bag_of_words and polarity
 class Classifier:
+    # constructor: Classifier constructor
+    # description: set up the instance variables to be used in the methods. load a classifier
+    # return: None
+    # parameters: None
     def __init__(self):
         self.classifier = get_classifier()
 
+    # function: add_bag_and_polarity
+    # description: it will add the polarity and bag_of_words field/column into a given tweet
+    # return: a the original tweet plus (included) bag_of_words and polarity
+    # parameters: a single tweet
     def add_bag_and_polarity(self, doc):
         data = doc
         lang = data["user"]["lang"]
@@ -170,7 +201,11 @@ class Classifier:
         data.update(sentiment)
         return data
 
-
+# function: text_info
+# description: method to perform tests
+# return: None
+# parameters: a plain text to be analized
+# comments: not in use
 def text_info(text):
     text = goslate.Goslate().translate(text, 'en')
     txt_low = ' ' + text.lower() + ' '
