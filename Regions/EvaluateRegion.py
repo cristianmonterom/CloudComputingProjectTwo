@@ -9,9 +9,8 @@ from Regions.PlaningAreas import areas_dict
 import time
 
 
-""" SG_planning class
-    Usage: It is intended for retrieving a name given a latitude and longitude coordinates
-"""
+# SG_planning class
+# Usage: It is intended for retrieving a name given a latitude and longitude coordinates
 class SG_planning:
 
     def __init__(self):
